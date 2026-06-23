@@ -1,0 +1,119 @@
+
+Duplicate the azure login tabs (2 tabs)
+
+Tab1: search keyvaults
+
+Click on  + create
+
+Copy  subscription name :  “ Azure subscription 1” and go to another azure tab
+ And search “app registration” —>click→+new registration —> enter name as “Azure subscription 1” →register
+
+Display name
+Azure subscription 1
+Application (client) ID
+d463d697-fbfb-4b2c-b6a8-141138ffcc7e
+Object ID
+3850b80d-3f6d-4274-b3c2-93ba4a8aa124
+Directory (tenant) ID
+41de4cd0-6890-4fb2-b447-4b7a99cab5fc
+Supported account types
+My organization only
+Client credentials
+Add a certificate or secret
+Redirect URIs
+Add a Redirect URI
+
+Application ID URI
+Add an Application ID URI
+
+Managed application in local directory
+Azure subscription 1
+State
+
+Click on “Add a certificate or secret” on right top—>
+Click on →new client secret →name as “authenticate”-->expiry date: 365 days—> click on add
+Click notepad and add 2 secret keys:
+
+Value:               4B08Q~cA2.rmhO0Ib.iXQ2BpKuu-gippZvt4lbHH
+
+Secret ID:         1b7146c6-84c4-4262-ac82-c94bb87d4d9d
+
+
+Now go to keyvault tab—>create keyvault→give resource group→create new : RG-Demo→enter Key vault name: myKeyvault1990  —click next—>
+Select →Vault access policy—->click on + create  —->select Secret permissions
+—>select all  —->next
+
+Search →Azure subscription 1—>next —>create
+Select “azure subscription 1”-->click: review+create→wait for few seconds→click:create—>wait for few seconds
+click→Go to resource→object→secrets→
+Click on →+generate/import→  upload action:manual—>name: MyName(any name)--->enter secret key and remember it
+→click:create
+
+
+Step 2:
+
+Go to home page:
+Search→Azure devops organization
+
+Click →:view my organization→go to ur organization→create new project: exp11—>create
+ 
+Click on “organization name” on top  ex: bindiyaaj1 →go to “organization setting” down left corner→
+Click
+
+—> go to “settings “ on left →click—>make sure following things in screen shots gets disabled
+
+Now come back to project folder → search created new project ex: pgm11.1
+
+Go to pipeline→library
+ 
+Click on →+variable group→select default variable group name→ enable : link secrets from azure keyvault→click :authorize→it will ask for microsoft login and enter secret key
+
+Now select: key vault name  in drop down —>authorize with microsoft login and enter secret key
+Click on  :   
++add→select your secret→ ok—>click on save
+Now go to : pipeline →create pipeline —>select git→
+Click on “ azure-keyvault-demo”-->
+Click on :approve and install
+It will ask for microsift login and finally directed to following screen
+Now click on “RUN”
+Click on “stage/job”
+Fill the “request form”
+https://aka.ms/azpipelines-parallelism-request
+When you click on 
+Click on “pipeline”
+
+Goto :”Exp 11.1”
+Goto “Pipeleine”-->release→>new pipeline
+Select a template→empty job (on right->top)
+Click on stage1→jobs
+Click on “Agent Job” +  —>   “agent Job “vertical dots” || —>enter agent job details : such as “ agent pool→Agent pipelines” and “agent specification:windows-latest”
+Click on “save” on top → click “ok” 
+
+Click on “Agent Job +” → search “azure key vault” →add—>
+Select “Azure Key Vault” → enter “select “Azure Subscription” “→ select your “Key vault”  → save
+—-------------------------------------------------------------------------------------
+
+Search “power shell” → add —> select power shell→ select “inline” 
+Under scripts → add below code
+Write-Host "$(MySecret)"
+Here MySecret is the name of the “secret key” you created earlier
+Click “save” → OK
+—------------------------------------------------------------------------------------
+Go to “pipeline” —> releases →click on “new release pipeline”--> click on create release (right top)
+—-------------------------------------------------
+Click → create
+—---------------------------------
+Wait for some seconds
+—----------------------------------------
+
+Click on “ Release-1” blue color
+
+
+Click on “stage 1” →  wait for few seconds—> if you click on logs you will  find the stages in release
+—---------------------------------------------------------------
+
+
+
+
+
+If you click on “ poweshell scrpt” —>  you can see  “hello world”  and secret key : ***
