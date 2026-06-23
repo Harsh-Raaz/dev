@@ -1,0 +1,180 @@
+### EXP 11 Simple Process
+
+#### 1. Create App Registration
+
+* Azure Portal → App Registrations
+* Click **New Registration**
+* Name:
+
+```text
+Azure subscription 1
+```
+
+* Register
+* Copy:
+
+```text
+Client ID
+Tenant ID
+```
+
+#### 2. Create Client Secret
+
+* Certificates & Secrets
+* New Client Secret
+* Name:
+
+```text
+authenticate
+```
+
+* Add
+* Copy Secret Value
+
+---
+
+#### 3. Create Key Vault
+
+* Search **Key Vaults**
+* Create
+* Resource Group:
+
+```text
+RG-Demo
+```
+
+* Key Vault Name:
+
+```text
+myKeyvault1990
+```
+
+* Select **Vault Access Policy**
+* Give all Secret Permissions
+* Assign access to:
+
+```text
+Azure subscription 1
+```
+
+* Create
+
+---
+
+#### 4. Add Secret
+
+* Key Vault → Secrets
+* Generate/Import
+* Enter:
+
+```text
+Name: MySecret
+Value: HelloWorld
+```
+
+* Create
+
+---
+
+#### 5. Create Azure DevOps Project
+
+* Azure DevOps → New Project
+
+```text
+Exp11
+```
+
+---
+
+#### 6. Link Key Vault
+
+* Pipelines → Library
+* Variable Group
+* Enable:
+
+```text
+Link secrets from Azure Key Vault
+```
+
+* Select:
+
+```text
+myKeyvault1990
+```
+
+* Add:
+
+```text
+MySecret
+```
+
+* Save
+
+---
+
+#### 7. Create Release Pipeline
+
+* Pipelines → Releases
+* New Pipeline
+* Empty Job
+
+Configure:
+
+```text
+Agent Pool: Azure Pipelines
+Agent: windows-latest
+```
+
+---
+
+#### 8. Add Azure Key Vault Task
+
+* Agent Job → +
+* Search:
+
+```text
+Azure Key Vault
+```
+
+* Select subscription and Key Vault
+* Save
+
+---
+
+#### 9. Add PowerShell Task
+
+Code:
+
+```powershell
+Write-Host "$(MySecret)"
+```
+
+Save
+
+---
+
+#### 10. Run Release
+
+* Create Release
+* Open Release-1
+* Check Logs
+
+Output:
+
+```text
+***
+```
+
+(secret hidden automatically)
+
+### Code Used
+
+```powershell
+Write-Host "$(MySecret)"
+```
+
+### Result
+
+```text
+Successfully retrieved a secret from Azure Key Vault using Azure DevOps Release Pipeline.
+```
