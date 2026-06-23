@@ -1,104 +1,57 @@
-✅ DevOps Lab – Experiment 6
-🎯 Aim
+ Update System and Install Java
 
-To install Jenkins, integrate Maven, and build a Java application using a Jenkins Freestyle Job.
-
-🔷 Procedure
-🔸 Step 1: Launch EC2 Instance
-OS: Ubuntu
-Start instance
-Connect using SSH
-ssh -i your-key.pem ubuntu@your-public-ip
-🔷 INSTALLATION
-🔸 Step 2: Update System & Install Java (JDK 21)
 sudo apt update
-sudo apt install openjdk-21-jdk -y
-✔ Verify:
+sudo apt install openjdk-17-jdk -y
 java -version
-🔸 Step 3: Install Maven (3.9.6)
-wget https://archive.apache.org/dist/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz
 
-sudo tar -xzf apache-maven-3.9.6-bin.tar.gz -C /opt/
+2.Jenkins Installation on Ubuntu (Latest Method)
 
-echo 'export PATH=/opt/apache-maven-3.9.6/bin:$PATH' | sudo tee /etc/profile.d/maven.sh
+https://pkg.jenkins.io/
 
-source /etc/profile.d/maven.sh
-✔ Verify:
-mvn -version
-🔸 Step 4: Install Jenkins
-curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | sudo tee \
-/usr/share/keyrings/jenkins-keyring.asc > /dev/null
+3: Start and Enable Jenkins
+sudo systemctl start jenkins
+sudo systemctl enable jenkins
+sudo systemctl status jenkins  # Check if Jenkins is running
 
-echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
-https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
-/etc/apt/sources.list.d/jenkins.list > /dev/null
+or
 
-sudo apt update
-sudo apt install jenkins -y
-🔸 Step 5: Start Jenkins
 sudo service jenkins start
 sudo service jenkins status
-🔸 Step 6: Open Port 8080 (AWS)
-EC2 → Security Group → Inbound Rules
-Add:
-Port: 8080
-Source: 0.0.0.0/0
-🔸 Step 7: Access Jenkins
-http://your-public-ip:8080
-🔸 Step 8: Unlock Jenkins
+
+4: Get Jenkins Admin Password
 sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 
-👉 Paste password in browser
-👉 Install suggested plugins
-👉 Create user
 
-🔷 JENKINS CONFIGURATION
-🔸 Step 9: Install Maven Plugin
-Go to Manage Jenkins → Plugins
-Install:
-✔ Maven Integration Plugin
-🔸 Step 10: Configure Maven in Jenkins
+5: Access Jenkins Web Interface
 
-Go to:
+first allow custom tcp port 8080 by selecting anywhere with ipv4 with all zeros in security grops of that instance 
+http://your-server-ip(public-ip):8080
 
-Manage Jenkins → Tools → Maven
-Field	Value
-Name	Maven 3.9.6
-Install automatically	❌ Uncheck
-MAVEN_HOME	/opt/apache-maven-3.9.6
-🔷 CREATE JENKINS JOB
-🔸 Step 11: Create Freestyle Job
-New Item
-Select Freestyle Project
-Name it → OK
-🔸 Step 12: Configure Job
-✔ Source Code Management
-https://github.com/mvsanthi123/simple-java-maven-app.git
-✔ Build Step
-Add Build Step → Invoke top-level Maven targets
-Field	Value
-Maven Version	Maven 3.9.6
-Goals	clean install
-🔷 BUILD & EXECUTE
-🔸 Step 13: Run Build
-Click Build Now
-Check Console Output
-🔸 Step 14: Check JAR File
+0d740e938eef4641b36cd509577aabfe
+
+6.next install maven
+
+wget https://archive.apache.org/dist/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz
+sudo tar -xvzf apache-maven-3.9.6-bin.tar.gz -C /opt/
+echo 'export M2_HOME=/opt/apache-maven-3.9.6' | sudo tee -a /etc/profile.d/maven.sh
+echo 'export PATH=$M2_HOME/bin:$PATH' | sudo tee -a /etc/profile.d/maven.sh
+source /etc/profile.d/maven.sh
+mvn -version
+
+
+7.next go to jenkins ui there under manage plugins , install maven integartion plugin,next go to tools 
+there add maven like give name as maven 3.9.6, uncheck install automatically there u type /opt/apache-maven-3.9.6
+clik save
+
+8.next create a freetsyle job under this give git repo and underbuild steps
+select Invoke top-level Maven targets next type maven version as Maven 3.9.6 and goals as clean install and save
+
+9.next run the build, there it will show you the jar file creation
+
+10. to check our jar file
 sudo su - jenkins
 cd /var/lib/jenkins/.m2/repository/com/mycompany/app/my-app/1.0-SNAPSHOT/
-ls
 
-👉 Output:
-
-my-app-1.0-SNAPSHOT.jar
-🔸 Step 15: Run Application
+11.to see the outcome of jar file
 java -jar my-app-1.0-SNAPSHOT.jar
-
-👉 Output:
-
-Hello World
-✅ Result
-Jenkins installed successfully
-Maven integrated with Jenkins
-Java project built using Jenkins
-.jar file executed successfully
+o/p: Hello world
